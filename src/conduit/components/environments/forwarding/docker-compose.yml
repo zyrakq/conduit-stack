@@ -1,0 +1,4 @@
+services:
+  conduit:
+    ports:
+      - 8448:${CONDUIT_PORT}

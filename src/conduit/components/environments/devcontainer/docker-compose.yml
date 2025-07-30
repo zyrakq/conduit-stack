@@ -1,0 +1,8 @@
+services:
+  conduit:
+    networks:
+      - conduit-workspace-network
+
+networks:
+  conduit-workspace-network:
+    external: true

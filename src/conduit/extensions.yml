@@ -1,0 +1,26 @@
+version: "1.0"
+groups:
+  auth:
+    description: "Authentication services"
+    extensions:
+      - oidc
+
+  step-ca:
+    description: "smallstep-ca"
+    extensions:
+      - step-ca-trust
+
+conflicts:
+combinations:
+  - name: "oidc+step-ca-trust"
+    extensions: ["oidc","step-ca-trust"]
+    description: "-"
+
+naming:
+  separator: "+"
+  sort: true
+
+metadata:
+  created: "2025-08-10"
+  description: "Keycloak"
+  author: "Keycloak Stack"

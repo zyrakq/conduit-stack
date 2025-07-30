@@ -1,0 +1,24 @@
+services:
+  conduit:
+    image: conduit
+    build: .
+    environment:
+      CONDUIT_CONFIG: ${CONDUIT_CONFIG:-/matrix-conduit/conduit.toml}
+    configs:
+      - source: conduit-config
+        target: ${CONDUIT_CONFIG:-/matrix-conduit/conduit.toml}
+
+configs:
+  conduit-config:
+    content: |
+      [global]
+      server_name = "${CONDUIT_SERVER_NAME}"
+
+      [global.idps.sso]
+      issuer = "${CONDUIT_IDPS_SSO_ISSUER}"
+      name = "${CONDUIT_IDPS_SSO_NAME}"
+      icon = "${CONDUIT_IDPS_SSO_ICON}"
+      scopes = ${CONDUIT_IDPS_SSO_SCOPES}
+      client_id = "${CONDUIT_IDPS_SSO_CLIENT_ID}"
+      client_secret = "${CONDUIT_IDPS_SSO_CLIENT_SECRET}"
+      auth_method = "${CONDUIT_IDPS_SSO_AUTH_METHOD}"

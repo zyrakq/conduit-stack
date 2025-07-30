@@ -1,0 +1,47 @@
+services:
+  conduit:
+    container_name: conduit
+    image: conduit
+    restart: unless-stopped
+    volumes:
+      - conduit-db:/var/lib/matrix-conduit/
+    environment:
+      CONDUIT_SERVER_NAME: ${CONDUIT_SERVER_NAME}
+      CONDUIT_DATABASE_PATH: ${CONDUIT_DATABASE_PATH}
+      CONDUIT_DATABASE_BACKEND: ${CONDUIT_DATABASE_BACKEND}
+      CONDUIT_PORT: ${CONDUIT_PORT}
+      CONDUIT_MAX_REQUEST_SIZE: ${CONDUIT_MAX_REQUEST_SIZE}
+      CONDUIT_ALLOW_REGISTRATION: ${CONDUIT_ALLOW_REGISTRATION}
+      # CONDUIT_REGISTRATION_TOKEN: ${CONDUIT_REGISTRATION_TOKEN}
+      CONDUIT_ALLOW_FEDERATION: ${CONDUIT_ALLOW_FEDERATION}
+      CONDUIT_ALLOW_CHECK_FOR_UPDATES: ${CONDUIT_ALLOW_CHECK_FOR_UPDATES}
+      CONDUIT_TRUSTED_SERVERS: ${CONDUIT_TRUSTED_SERVERS}
+      CONDUIT_ADDRESS: ${CONDUIT_ADDRESS}
+      CONDUIT_CONFIG: ${CONDUIT_CONFIG:-/matrix-conduit/conduit.toml}
+    ports:
+      - 8448:${CONDUIT_PORT}
+    build: .
+    configs:
+      - source: conduit-config
+        target: ${CONDUIT_CONFIG:-/matrix-conduit/conduit.toml}
+volumes:
+  conduit-db:
+    name: conduit-db
+    driver: local
+networks:
+  matrix-network:
+    name: matrix-network
+configs:
+  conduit-config:
+    content: |-
+      [global]
+      server_name = "${CONDUIT_SERVER_NAME}"
+
+      [global.idps.sso]
+      issuer = "${CONDUIT_IDPS_SSO_ISSUER}"
+      name = "${CONDUIT_IDPS_SSO_NAME}"
+      icon = "${CONDUIT_IDPS_SSO_ICON}"
+      scopes = ${CONDUIT_IDPS_SSO_SCOPES}
+      client_id = "${CONDUIT_IDPS_SSO_CLIENT_ID}"
+      client_secret = "${CONDUIT_IDPS_SSO_CLIENT_SECRET}"
+      auth_method = "${CONDUIT_IDPS_SSO_AUTH_METHOD}"

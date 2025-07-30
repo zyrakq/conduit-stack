@@ -1,0 +1,33 @@
+services:
+  conduit:
+    container_name: conduit
+    image: matrixconduit/matrix-conduit:latest
+    restart: unless-stopped
+    volumes:
+      - conduit-db:/var/lib/matrix-conduit/
+    environment:
+      CONDUIT_SERVER_NAME: ${CONDUIT_SERVER_NAME}
+      CONDUIT_DATABASE_PATH: ${CONDUIT_DATABASE_PATH}
+      CONDUIT_DATABASE_BACKEND: ${CONDUIT_DATABASE_BACKEND}
+      CONDUIT_PORT: ${CONDUIT_PORT}
+      CONDUIT_MAX_REQUEST_SIZE: ${CONDUIT_MAX_REQUEST_SIZE}
+      CONDUIT_ALLOW_REGISTRATION: ${CONDUIT_ALLOW_REGISTRATION}
+      # CONDUIT_REGISTRATION_TOKEN: ${CONDUIT_REGISTRATION_TOKEN}
+      CONDUIT_ALLOW_FEDERATION: ${CONDUIT_ALLOW_FEDERATION}
+      CONDUIT_ALLOW_CHECK_FOR_UPDATES: ${CONDUIT_ALLOW_CHECK_FOR_UPDATES}
+      CONDUIT_TRUSTED_SERVERS: ${CONDUIT_TRUSTED_SERVERS}
+      CONDUIT_ADDRESS: ${CONDUIT_ADDRESS}
+      CONDUIT_CONFIG: ${CONDUIT_CONFIG}
+      STEP_CA_TRUST: ${STEP_CA_TRUST:-true}
+      STEP_CA_TRUST_RESTART: ${STEP_CA_TRUST_RESTART:-true}
+    networks:
+      - conduit-workspace-network
+volumes:
+  conduit-db:
+    name: conduit-db
+    driver: local
+networks:
+  matrix-network:
+    name: matrix-network
+  conduit-workspace-network:
+    external: true
