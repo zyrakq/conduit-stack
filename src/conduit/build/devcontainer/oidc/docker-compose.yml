@@ -19,6 +19,7 @@ services:
       CONDUIT_ADDRESS: ${CONDUIT_ADDRESS}
       CONDUIT_CONFIG: ${CONDUIT_CONFIG:-/matrix-conduit/conduit.toml}
     networks:
+      - matrix-network
       - conduit-workspace-network
     build: .
     configs:

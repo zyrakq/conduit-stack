@@ -23,6 +23,7 @@ services:
       LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
     networks:
+      - matrix-network
       - letsencrypt-network
     build: .
     configs:
@@ -71,15 +72,13 @@ configs:
           server_name ${WELL_KNOWN_VIRTUAL_HOST};
           listen      80 default_server;
 
-          location /.well-known/matrix/server {
-            return 200 '{"m.server": "${VIRTUAL_HOST}:443"}';
-            types { } default_type "application/json; charset=utf-8";
-          }
-
-          location /.well-known/matrix/client {
-            return 200 '{"m.homeserver": {"base_url": "https://${VIRTUAL_HOST}"}}';
-            types { } default_type "application/json; charset=utf-8";
-            add_header "Access-Control-Allow-Origin" *;
+          location ~ ^/.well-known/(.*)$ {
+            proxy_pass http://conduit:${CONDUIT_PORT};
+            proxy_set_header Host $$host;
+            proxy_set_header X-Real-IP $$remote_addr;
+            proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $$scheme;
+            proxy_set_header X-Forwarded-Host $$host;
           }
 
           location ~ ^/_matrix/(.*)$ {

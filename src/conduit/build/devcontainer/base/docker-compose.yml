@@ -19,6 +19,7 @@ services:
       CONDUIT_ADDRESS: ${CONDUIT_ADDRESS}
       CONDUIT_CONFIG: ${CONDUIT_CONFIG}
     networks:
+      - matrix-network
       - conduit-workspace-network
 volumes:
   conduit-db:
