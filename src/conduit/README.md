@@ -26,31 +26,50 @@ src/conduit/
 │       │   ├── docker-compose.yml          # OIDC configuration
 │       │   ├── .env.example                # OIDC variables
 │       │   └── Dockerfile                  # Custom Conduit image with OIDC
-│       └── step-ca-trust/                  # Step CA certificate trust
-│           ├── docker-compose.yml          # Step CA trust configuration
-│           └── .env.example                # Step CA trust variables
+│       ├── step-ca-trust/                  # Step CA certificate trust
+│       │   ├── docker-compose.yml          # Step CA trust configuration
+│       │   └── .env.example                # Step CA trust variables
+│       └── turn/                           # TURN server integration for voice/video calls
+│           ├── docker-compose.yml          # TURN configuration
+│           └── .env.example                # TURN variables
 ├── extensions.yml                          # Extension compatibility configuration
 ├── build/                        # Generated configurations (auto-generated)
 │   ├── devcontainer/
 │   │   ├── base/                 # DevContainer + base
 │   │   ├── oidc/                 # DevContainer + base + OIDC
+│   │   ├── turn/                 # DevContainer + base + TURN
 │   │   ├── step-ca-trust/        # DevContainer + base + Step CA trust
-│   │   └── oidc+step-ca-trust/   # DevContainer + base + OIDC + Step CA trust
+│   │   ├── oidc+turn/            # DevContainer + base + OIDC + TURN
+│   │   ├── oidc+step-ca-trust/   # DevContainer + base + OIDC + Step CA trust
+│   │   ├── turn+step-ca-trust/   # DevContainer + base + TURN + Step CA trust
+│   │   └── oidc+turn+step-ca-trust/ # DevContainer + base + OIDC + TURN + Step CA trust
 │   ├── forwarding/
 │   │   ├── base/                 # Development + base
 │   │   ├── oidc/                 # Development + base + OIDC
+│   │   ├── turn/                 # Development + base + TURN
 │   │   ├── step-ca-trust/        # Development + base + Step CA trust
-│   │   └── oidc+step-ca-trust/   # Development + base + OIDC + Step CA trust
+│   │   ├── oidc+turn/            # Development + base + OIDC + TURN
+│   │   ├── oidc+step-ca-trust/   # Development + base + OIDC + Step CA trust
+│   │   ├── turn+step-ca-trust/   # Development + base + TURN + Step CA trust
+│   │   └── oidc+turn+step-ca-trust/ # Development + base + OIDC + TURN + Step CA trust
 │   ├── letsencrypt/
 │   │   ├── base/                 # Let's Encrypt + base
 │   │   ├── oidc/                 # Let's Encrypt + base + OIDC
+│   │   ├── turn/                 # Let's Encrypt + base + TURN
 │   │   ├── step-ca-trust/        # Let's Encrypt + base + Step CA trust
-│   │   └── oidc+step-ca-trust/   # Let's Encrypt + base + OIDC + Step CA trust
+│   │   ├── oidc+turn/            # Let's Encrypt + base + OIDC + TURN
+│   │   ├── oidc+step-ca-trust/   # Let's Encrypt + base + OIDC + Step CA trust
+│   │   ├── turn+step-ca-trust/   # Let's Encrypt + base + TURN + Step CA trust
+│   │   └── oidc+turn+step-ca-trust/ # Let's Encrypt + base + OIDC + TURN + Step CA trust
 │   └── step-ca/
 │       ├── base/                 # Step CA + base
 │       ├── oidc/                 # Step CA + base + OIDC
+│       ├── turn/                 # Step CA + base + TURN
 │       ├── step-ca-trust/        # Step CA + base + Step CA trust
-│       └── oidc+step-ca-trust/   # Step CA + base + OIDC + Step CA trust
+│       ├── oidc+turn/            # Step CA + base + OIDC + TURN
+│       ├── oidc+step-ca-trust/   # Step CA + base + OIDC + Step CA trust
+│       ├── turn+step-ca-trust/   # Step CA + base + TURN + Step CA trust
+│       └── oidc+turn+step-ca-trust/ # Step CA + base + OIDC + TURN + Step CA trust
 ├── build.sh                      # Build script
 └── README.md                     # This file
 ```
@@ -78,11 +97,23 @@ cd build/forwarding/base/
 # For development with port forwarding and OIDC
 cd build/forwarding/oidc/
 
+# For development with port forwarding and TURN
+cd build/forwarding/turn/
+
+# For development with port forwarding, OIDC and TURN
+cd build/forwarding/oidc+turn/
+
 # For DevContainer environment
 cd build/devcontainer/base/
 
 # For DevContainer environment with OIDC
 cd build/devcontainer/oidc/
+
+# For DevContainer environment with TURN
+cd build/devcontainer/turn/
+
+# For DevContainer environment with OIDC and TURN
+cd build/devcontainer/oidc+turn/
 
 # For production with Let's Encrypt SSL
 cd build/letsencrypt/base/
@@ -90,14 +121,26 @@ cd build/letsencrypt/base/
 # For production with Let's Encrypt SSL and OIDC
 cd build/letsencrypt/oidc/
 
+# For production with Let's Encrypt SSL and TURN
+cd build/letsencrypt/turn/
+
+# For production with Let's Encrypt SSL, OIDC and TURN
+cd build/letsencrypt/oidc+turn/
+
 # For production with Step CA SSL
 cd build/step-ca/base/
 
 # For production with Step CA SSL and OIDC
 cd build/step-ca/oidc/
 
-# For production with Step CA SSL, OIDC and Step CA trust
-cd build/step-ca/oidc+step-ca-trust/
+# For production with Step CA SSL and TURN
+cd build/step-ca/turn/
+
+# For production with Step CA SSL, OIDC and TURN
+cd build/step-ca/oidc+turn/
+
+# For production with Step CA SSL, OIDC, TURN and Step CA trust
+cd build/step-ca/oidc+turn+step-ca-trust/
 ```
 
 ### 3. Configure Environment
@@ -131,6 +174,7 @@ Access: `http://localhost:6167` (for forwarding mode)
 ### Extensions
 
 - **oidc**: OIDC authentication integration for enhanced authentication
+- **turn**: TURN server integration for voice and video calls
 - **step-ca-trust**: Step CA certificate trust integration
 
 ### Generated Combinations
@@ -147,22 +191,38 @@ Each environment can be combined with extensions to provide complete Conduit dep
 **Single extension configurations:**
 
 - `devcontainer/oidc` - DevContainer development with OIDC authentication
+- `devcontainer/turn` - DevContainer development with TURN server for calls
 - `devcontainer/step-ca-trust` - DevContainer development with Step CA certificate trust
 - `forwarding/oidc` - Development with port forwarding and OIDC authentication
+- `forwarding/turn` - Development with port forwarding and TURN server for calls
 - `forwarding/step-ca-trust` - Development with port forwarding and Step CA certificate trust
 - `letsencrypt/oidc` - Production with Let's Encrypt SSL and OIDC authentication
+- `letsencrypt/turn` - Production with Let's Encrypt SSL and TURN server for calls
 - `letsencrypt/step-ca-trust` - Production with Let's Encrypt SSL and Step CA certificate trust
 - `step-ca/oidc` - Production with Step CA SSL and OIDC authentication
+- `step-ca/turn` - Production with Step CA SSL and TURN server for calls
 - `step-ca/step-ca-trust` - Production with Step CA SSL and Step CA certificate trust
 
 **Combined extension configurations:**
 
 When [`extensions.yml`](extensions.yml) is present, additional combinations are generated:
 
+- `devcontainer/oidc+turn` - DevContainer development with OIDC + TURN
 - `devcontainer/oidc+step-ca-trust` - DevContainer development with OIDC + Step CA trust
+- `devcontainer/turn+step-ca-trust` - DevContainer development with TURN + Step CA trust
+- `devcontainer/oidc+turn+step-ca-trust` - DevContainer development with OIDC + TURN + Step CA trust
+- `forwarding/oidc+turn` - Development with port forwarding + OIDC + TURN
 - `forwarding/oidc+step-ca-trust` - Development with port forwarding + OIDC + Step CA trust
+- `forwarding/turn+step-ca-trust` - Development with port forwarding + TURN + Step CA trust
+- `forwarding/oidc+turn+step-ca-trust` - Development with port forwarding + OIDC + TURN + Step CA trust
+- `letsencrypt/oidc+turn` - Production with Let's Encrypt + OIDC + TURN
 - `letsencrypt/oidc+step-ca-trust` - Production with Let's Encrypt + OIDC + Step CA trust
+- `letsencrypt/turn+step-ca-trust` - Production with Let's Encrypt + TURN + Step CA trust
+- `letsencrypt/oidc+turn+step-ca-trust` - Production with Let's Encrypt + OIDC + TURN + Step CA trust
+- `step-ca/oidc+turn` - Production with Step CA + OIDC + TURN
 - `step-ca/oidc+step-ca-trust` - Production with Step CA + OIDC + Step CA trust
+- `step-ca/turn+step-ca-trust` - Production with Step CA + TURN + Step CA trust
+- `step-ca/oidc+turn+step-ca-trust` - Production with Step CA + OIDC + TURN + Step CA trust
 
 ## 🔧 Environment Variables
 
@@ -223,6 +283,13 @@ When [`extensions.yml`](extensions.yml) is present, additional combinations are 
 
 The step-ca-trust extension automatically configures containers to trust certificates issued by Step CA, enabling secure communication with Step CA-protected services.
 
+### TURN Configuration
+
+- `CONDUIT_TURN_URIS`: List of TURN server URIs for voice and video calls (e.g., ["turn:example.com?transport=udp", "turn:example.com?transport=tcp"])
+- `CONDUIT_TURN_SECRET`: Shared secret for TURN server authentication
+
+The TURN extension enables voice and video calling functionality by configuring TURN servers for NAT traversal and media relay.
+
 ## 🔐 OIDC Integration
 
 The OIDC extension provides integration with external identity providers for enhanced authentication and user management.
@@ -241,8 +308,20 @@ The OIDC extension provides integration with external identity providers for enh
    # For development with OIDC
    cd build/forwarding/oidc/
    
+   # For development with TURN
+   cd build/forwarding/turn/
+   
+   # For development with OIDC and TURN
+   cd build/forwarding/oidc+turn/
+   
    # For production with Let's Encrypt and OIDC
    cd build/letsencrypt/oidc/
+   
+   # For production with Let's Encrypt and TURN
+   cd build/letsencrypt/turn/
+   
+   # For production with Let's Encrypt, OIDC and TURN
+   cd build/letsencrypt/oidc+turn/
    ```
 
 3. **Configure identity provider:**
@@ -266,6 +345,70 @@ The OIDC extension provides integration with external identity providers for enh
    ```bash
    docker-compose up -d
    ```
+
+## 📞 TURN Integration
+
+The TURN extension provides voice and video calling capabilities for Matrix clients by configuring TURN servers for NAT traversal and media relay.
+
+### Using TURN Extension
+
+1. **Build with TURN extension:**
+
+  ```bash
+  ./build.sh
+  ```
+
+2. **Choose TURN-enabled configuration:**
+
+  ```bash
+  # For development with TURN
+  cd build/forwarding/turn/
+  
+  # For production with Let's Encrypt and TURN
+  cd build/letsencrypt/turn/
+  
+  # For combined OIDC and TURN
+  cd build/step-ca/oidc+turn/
+  ```
+
+3. **Configure TURN servers:**
+
+  ```bash
+  cp .env.example .env
+  # Edit .env with your TURN server details
+  ```
+
+4. **Example TURN configuration:**
+
+  ```bash
+  CONDUIT_SERVER_NAME=matrix.example.com
+  CONDUIT_TURN_URIS='["turn:turn.example.com?transport=udp", "turn:turn.example.com?transport=tcp"]'
+  CONDUIT_TURN_SECRET=your-turn-secret
+  ```
+
+5. **Deploy:**
+
+  ```bash
+  docker-compose up -d
+  ```
+
+### TURN Server Requirements
+
+For voice and video calls to work properly, you need:
+
+- **TURN Server**: A properly configured TURN server (coturn, eturnal, etc.)
+- **Network Access**: TURN server accessible from client networks
+- **Authentication**: Shared secret between Conduit and TURN server
+- **Protocols**: Support for both UDP and TCP transport
+- **Firewall**: Proper firewall configuration for TURN ports
+
+### TURN Server Examples
+
+Popular TURN server implementations:
+
+- **Coturn**: Open-source TURN server with extensive configuration options
+- **Eturnal**: Modern Erlang-based TURN server with STUN support
+- **Pion TURN**: Go-based TURN server with WebRTC focus
 
 ## 🛠️ Development
 
@@ -325,6 +468,11 @@ groups:
     extensions:
       - oidc
 
+  call:
+    description: "Voice and video calling"
+    extensions:
+      - turn
+
   step-ca:
     description: "smallstep-ca"
     extensions:
@@ -332,9 +480,18 @@ groups:
 
 # Valid combinations
 combinations:
+  - name: "oidc+turn"
+    extensions: ["oidc", "turn"]
+    description: "Authentication with voice/video calls"
   - name: "oidc+step-ca-trust"
     extensions: ["oidc", "step-ca-trust"]
     description: "Authentication with Step CA trust"
+  - name: "turn+step-ca-trust"
+    extensions: ["turn", "step-ca-trust"]
+    description: "Voice/video calls with Step CA trust"
+  - name: "oidc+turn+step-ca-trust"
+    extensions: ["oidc", "turn", "step-ca-trust"]
+    description: "Full featured setup with authentication, calls and Step CA trust"
 ```
 
 ### Backward Compatibility
@@ -390,6 +547,15 @@ combinations:
 - Validate redirect URLs
 - Review OIDC provider logs
 
+**TURN Issues:**
+
+- Verify TURN server accessibility
+- Check TURN server configuration
+- Validate shared secret
+- Test TURN connectivity with tools like `turnutils_uclient`
+- Review TURN server logs
+- Check firewall rules for TURN ports
+
 ## 📝 Notes
 
 - The `build/` directory is automatically generated and should not be edited manually
@@ -429,6 +595,7 @@ The Conduit configuration includes:
 - **Database**: RocksDB backend for optimal performance
 - **Registration**: Configurable user registration with token support
 - **OIDC**: External authentication provider integration
+- **TURN**: Voice and video calling support with TURN server integration
 - **Well-known**: Automatic Matrix well-known delegation setup
 - **SSL**: Full SSL/TLS support with Let's Encrypt and Step CA
 - **Updates**: Automatic update checking capability
@@ -454,8 +621,9 @@ This comprehensive guide covers:
 
 Conduit works seamlessly with:
 
-- **Matrix Clients**: Element, Cinny, FluffyChat, and other Matrix clients
+- **Matrix Clients**: Element, Cinny, FluffyChat, and other Matrix clients with voice/video calling support
 - **Identity Providers**: Keycloak, Kanidm, and other OIDC providers
+- **TURN Servers**: Coturn, Eturnal, and other TURN/STUN servers for voice/video calls
 - **Bridges**: Matrix bridges for Telegram, Discord, and other platforms
 - **Bots**: Maubot and other Matrix bot frameworks
 - **Monitoring**: Prometheus and Grafana for metrics and monitoring

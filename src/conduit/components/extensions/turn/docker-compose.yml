@@ -1,0 +1,5 @@
+services:
+  conduit:
+    environment:
+      CONDUIT_TURN_URIS: ${CONDUIT_TURN_URIS}
+      CONDUIT_TURN_SECRET: ${CONDUIT_TURN_SECRET}

@@ -5,6 +5,11 @@ groups:
     extensions:
       - oidc
 
+  call:
+    description: "call"
+    extensions:
+      - turn
+
   step-ca:
     description: "smallstep-ca"
     extensions:
@@ -12,8 +17,17 @@ groups:
 
 conflicts:
 combinations:
+  - name: "oidc+turn"
+    extensions: ["oidc","turn"]
+    description: "-"
+  - name: "oidc+turn+step-ca-trust"
+    extensions: [oidc,"turn","step-ca-trust"]
+    description: "-"
   - name: "oidc+step-ca-trust"
     extensions: ["oidc","step-ca-trust"]
+    description: "-"
+  - name: "turn+step-ca-trust"
+    extensions: ["turn","step-ca-trust"]
     description: "-"
 
 naming:

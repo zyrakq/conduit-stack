@@ -10,3 +10,6 @@
 [submodule "src/identity-management/keycloak"]
 	path = src/identity-management/keycloak
 	url = https://github.com/zyrakq/keycloak-stack.git
+[submodule "src/coturn"]
+	path = src/coturn
+	url = https://github.com/zyrakq/coturn-stack.git
