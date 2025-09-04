@@ -36,5 +36,5 @@ naming:
 
 metadata:
   created: "2025-08-10"
-  description: "Keycloak"
-  author: "Keycloak Stack"
+  description: "Conduit"
+  author: "Conduit Stack"

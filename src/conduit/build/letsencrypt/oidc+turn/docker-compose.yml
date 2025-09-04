@@ -24,6 +24,11 @@ services:
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
       CONDUIT_TURN_URIS: ${CONDUIT_TURN_URIS}
       CONDUIT_TURN_SECRET: ${CONDUIT_TURN_SECRET}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 10m
+        max-file: 3
     networks:
       - matrix-network
       - letsencrypt-network

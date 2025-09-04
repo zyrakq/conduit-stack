@@ -20,6 +20,11 @@ services:
       CONDUIT_CONFIG: ${CONDUIT_CONFIG:-/matrix-conduit/conduit.toml}
       STEP_CA_TRUST: ${STEP_CA_TRUST:-true}
       STEP_CA_TRUST_RESTART: ${STEP_CA_TRUST_RESTART:-true}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 10m
+        max-file: 3
     networks:
       - matrix-network
       - conduit-workspace-network

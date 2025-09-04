@@ -18,6 +18,11 @@ services:
       CONDUIT_TRUSTED_SERVERS: ${CONDUIT_TRUSTED_SERVERS}
       CONDUIT_ADDRESS: ${CONDUIT_ADDRESS}
       CONDUIT_CONFIG: ${CONDUIT_CONFIG}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 10m
+        max-file: 3
     networks:
       - matrix-network
 
