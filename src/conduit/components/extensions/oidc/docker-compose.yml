@@ -1,7 +1,6 @@
 services:
   conduit:
-    image: conduit
-    build: .
+    image: localhost/conduit
     environment:
       CONDUIT_CONFIG: ${CONDUIT_CONFIG:-/matrix-conduit/conduit.toml}
     configs:

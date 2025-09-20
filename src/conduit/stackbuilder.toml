@@ -1,0 +1,29 @@
+[paths]
+environments_path = "./environments"
+extensions_dirs = ["extensions"]
+
+[build]
+extensions = ["oidc", "coturn", "step-ca-trust"]
+
+[build.combos]
+oidc-trust = ["oidc", "step-ca-trust"]
+coturn-trust = ["coturn", "step-ca-trust"]
+
+[build.environments]
+available = ["devcontainer", "forwarding", "letsencrypt", "step-ca"]
+
+[build.environments.devcontainer]
+extensions = ["coturn"]
+combos = []
+
+[build.environments.forwarding]
+extensions = ["coturn"]
+combos = []
+
+[build.environments.letsencrypt]
+extensions = ["coturn"]
+combos = []
+
+[build.environments.step-ca]
+extensions = ["step-ca-trust"]
+combos = ["oidc-trust", "coturn-trust"]

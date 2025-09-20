@@ -22,8 +22,8 @@ services:
       VIRTUAL_HOST: ${VIRTUAL_HOST}
       LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
-      STEP_CA_TRUST: ${STEP_CA_TRUST:-true}
-      STEP_CA_TRUST_RESTART: ${STEP_CA_TRUST_RESTART:-true}
+      CONDUIT_TURN_URIS: ${CONDUIT_TURN_URIS}
+      CONDUIT_TURN_SECRET: ${CONDUIT_TURN_SECRET}
     logging:
       driver: "json-file"
       options:
@@ -31,7 +31,7 @@ services:
         max-file: 3
     networks:
       - matrix-network
-      - step-ca-network
+      - letsencrypt-network
   conduit-nginx:
     container_name: conduit-nginx
     image: nginx
@@ -52,7 +52,7 @@ services:
       - source: nginx-config
         target: /etc/nginx/nginx.conf
     networks:
-      - step-ca-network
+      - letsencrypt-network
 volumes:
   conduit-db:
     name: conduit-db
@@ -60,7 +60,7 @@ volumes:
 networks:
   matrix-network:
     name: matrix-network
-  step-ca-network:
+  letsencrypt-network:
     external: true
 configs:
   nginx-config:
