@@ -17,7 +17,7 @@ services:
       CONDUIT_ALLOW_CHECK_FOR_UPDATES: ${CONDUIT_ALLOW_CHECK_FOR_UPDATES}
       CONDUIT_TRUSTED_SERVERS: ${CONDUIT_TRUSTED_SERVERS}
       CONDUIT_ADDRESS: ${CONDUIT_ADDRESS}
-      CONDUIT_CONFIG: ${CONDUIT_CONFIG}
+      CONDUIT_CONFIG: ${CONDUIT_CONFIG:-/matrix-conduit/conduit.toml}
       VIRTUAL_PORT: ${VIRTUAL_PORT:-$CONDUIT_PORT}
       VIRTUAL_HOST: ${VIRTUAL_HOST}
       LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
@@ -26,6 +26,9 @@ services:
       CONDUIT_TURN_SECRET: ${CONDUIT_TURN_SECRET}
       STEP_CA_TRUST: ${STEP_CA_TRUST:-true}
       STEP_CA_TRUST_RESTART: ${STEP_CA_TRUST_RESTART:-true}
+    configs:
+      - source: conduit-config
+        target: ${CONDUIT_CONFIG:-/matrix-conduit/conduit.toml}
     logging:
       driver: "json-file"
       options:
@@ -55,16 +58,19 @@ services:
         target: /etc/nginx/nginx.conf
     networks:
       - step-ca-network
-volumes:
-  conduit-db:
-    name: conduit-db
-    driver: local
-networks:
-  matrix-network:
-    name: matrix-network
-  step-ca-network:
-    external: true
 configs:
+  conduit-config:
+    content: |
+      [global]
+      server_name = "${CONDUIT_SERVER_NAME}"
+
+      [global.media]
+      backend = "filesystem"
+
+      [[global.media.retention]]
+      space = "${GLOBAL_MEDIA_RETENTION_SPACE:-5G}"
+      accessed = "${GLOBAL_MEDIA_RETENTION_ACCESSED:-30d}"
+      created = "${GLOBAL_MEDIA_RETENTION_CREATED:-30d}"
   nginx-config:
     content: |
       user nginx;
@@ -105,3 +111,12 @@ configs:
           }
         }
       }
+volumes:
+  conduit-db:
+    name: conduit-db
+    driver: local
+networks:
+  matrix-network:
+    name: matrix-network
+  step-ca-network:
+    external: true

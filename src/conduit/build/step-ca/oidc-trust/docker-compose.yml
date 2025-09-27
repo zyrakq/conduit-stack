@@ -24,6 +24,11 @@ services:
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
       STEP_CA_TRUST: ${STEP_CA_TRUST:-true}
       STEP_CA_TRUST_RESTART: ${STEP_CA_TRUST_RESTART:-true}
+    configs:
+      - source: conduit-config
+        target: ${CONDUIT_CONFIG:-/matrix-conduit/conduit.toml}
+      - source: conduit-config
+        target: ${CONDUIT_CONFIG:-/matrix-conduit/conduit.toml}
     logging:
       driver: "json-file"
       options:
@@ -32,9 +37,6 @@ services:
     networks:
       - matrix-network
       - step-ca-network
-    configs:
-      - source: conduit-config
-        target: ${CONDUIT_CONFIG:-/matrix-conduit/conduit.toml}
   conduit-nginx:
     container_name: conduit-nginx
     image: nginx
@@ -56,16 +58,20 @@ services:
         target: /etc/nginx/nginx.conf
     networks:
       - step-ca-network
-volumes:
-  conduit-db:
-    name: conduit-db
-    driver: local
-networks:
-  matrix-network:
-    name: matrix-network
-  step-ca-network:
-    external: true
 configs:
+  conduit-config:
+    content: |-
+      [global]
+      server_name = "${CONDUIT_SERVER_NAME}"
+
+      [global.idps.sso]
+      issuer = "${CONDUIT_IDPS_SSO_ISSUER}"
+      name = "${CONDUIT_IDPS_SSO_NAME}"
+      icon = "${CONDUIT_IDPS_SSO_ICON}"
+      scopes = ${CONDUIT_IDPS_SSO_SCOPES}
+      client_id = "${CONDUIT_IDPS_SSO_CLIENT_ID}"
+      client_secret = "${CONDUIT_IDPS_SSO_CLIENT_SECRET}"
+      auth_method = "${CONDUIT_IDPS_SSO_AUTH_METHOD}"
   nginx-config:
     content: |
       user nginx;
@@ -106,16 +112,12 @@ configs:
           }
         }
       }
-  conduit-config:
-    content: |-
-      [global]
-      server_name = "${CONDUIT_SERVER_NAME}"
-
-      [global.idps.sso]
-      issuer = "${CONDUIT_IDPS_SSO_ISSUER}"
-      name = "${CONDUIT_IDPS_SSO_NAME}"
-      icon = "${CONDUIT_IDPS_SSO_ICON}"
-      scopes = ${CONDUIT_IDPS_SSO_SCOPES}
-      client_id = "${CONDUIT_IDPS_SSO_CLIENT_ID}"
-      client_secret = "${CONDUIT_IDPS_SSO_CLIENT_SECRET}"
-      auth_method = "${CONDUIT_IDPS_SSO_AUTH_METHOD}"
+volumes:
+  conduit-db:
+    name: conduit-db
+    driver: local
+networks:
+  matrix-network:
+    name: matrix-network
+  step-ca-network:
+    external: true

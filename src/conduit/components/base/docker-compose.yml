@@ -17,7 +17,10 @@ services:
       CONDUIT_ALLOW_CHECK_FOR_UPDATES: ${CONDUIT_ALLOW_CHECK_FOR_UPDATES}
       CONDUIT_TRUSTED_SERVERS: ${CONDUIT_TRUSTED_SERVERS}
       CONDUIT_ADDRESS: ${CONDUIT_ADDRESS}
-      CONDUIT_CONFIG: ${CONDUIT_CONFIG}
+      CONDUIT_CONFIG: ${CONDUIT_CONFIG:-/matrix-conduit/conduit.toml}
+    configs:
+      - source: conduit-config
+        target: ${CONDUIT_CONFIG:-/matrix-conduit/conduit.toml}
     logging:
       driver: "json-file"
       options:
@@ -25,6 +28,20 @@ services:
         max-file: 3
     networks:
       - matrix-network
+
+configs:
+  conduit-config:
+    content: |
+      [global]
+      server_name = "${CONDUIT_SERVER_NAME}"
+
+      [global.media]
+      backend = "filesystem"
+
+      [[global.media.retention]]
+      space = "${GLOBAL_MEDIA_RETENTION_SPACE:-5G}"
+      accessed = "${GLOBAL_MEDIA_RETENTION_ACCESSED:-30d}"
+      created = "${GLOBAL_MEDIA_RETENTION_CREATED:-30d}"
 
 volumes:
   conduit-db:
