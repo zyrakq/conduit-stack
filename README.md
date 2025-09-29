@@ -37,6 +37,11 @@ Modern identity and access management server with comprehensive authentication c
 Modular Docker Compose configuration system for Conduit Matrix homeserver with support for multiple environments and OIDC integration capabilities. Provides lightweight, Rust-based Matrix homeserver deployment with customizable configurations for development and production.
 [Learn more about Conduit configuration](src/conduit/README.md).
 
+#### [🔄 Conduit Database Migration](src/conduit-migrate/)
+
+Database migration tools for Conduit Matrix homeserver. Migrate between different database backends (RocksDB, SQLite) without losing your Matrix data. Includes DevContainer setup and comprehensive migration guides.
+[Learn more about database migration](src/conduit-migrate/README.md).
+
 ## 🚀 Quick Start
 
 Each component has its own README with detailed setup instructions. Choose the certificate management solution and identity provider that fits your deployment scenario.

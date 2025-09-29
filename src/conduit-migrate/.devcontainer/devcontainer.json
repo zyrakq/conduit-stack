@@ -1,0 +1,22 @@
+{
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {},
+        "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
+            "packages": "git,clang,llvm-dev,libclang-dev,build-essential,pkg-config,libssl-dev,ca-certificates"
+        },
+        "ghcr.io/devcontainers/features/rust:1": {},
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+    },
+    "containerEnv": {
+        "LIBCLANG_PATH": "/usr/lib/x86_64-linux-gnu",
+        "BINDGEN_EXTRA_CLANG_ARGS": "-I/usr/include"
+    },
+    "workspaceFolder": "/workspace/conduit-migrate",
+    "workspaceMount": "source=conduit-migrate-workspace,target=/workspace/conduit-migrate,type=volume",
+    "mounts": [
+        "source=conduit-migrate-home,target=/home/vscode,type=volume"
+    ],
+    "remoteUser": "vscode",
+    "postStartCommand": "cargo install --locked --git https://github.com/shadowjonathan/conduit_toolbox conduit_migrate"
+}

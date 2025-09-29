@@ -327,6 +327,10 @@ The Conduit configuration includes:
 - **Updates**: Automatic update checking capability
 - **Trusted Servers**: Configurable trusted server list
 
+## 🔄 Database Migration
+
+If you need to migrate your Conduit database between different backends (e.g., from RocksDB to SQLite), use the [Conduit Database Migration Tool](../conduit-migrate/). This tool provides a safe way to migrate your Matrix data without losing information.
+
 ## ⚙️ Advanced Configuration
 
 For detailed configuration options of the Conduit Matrix
