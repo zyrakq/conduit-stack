@@ -37,27 +37,6 @@ services:
     networks:
       - matrix-network
       - step-ca-network
-  conduit-reverse:
-    container_name: conduit-reverse
-    image: ferronserver/ferron:2
-    restart: unless-stopped
-    environment:
-      VIRTUAL_PORT: ${WELL_KNOWN_VIRTUAL_PORT:-80}
-      VIRTUAL_HOST: ${WELL_KNOWN_VIRTUAL_HOST}
-      LETSENCRYPT_HOST: ${WELL_KNOWN_LETSENCRYPT_HOST}
-      LETSENCRYPT_EMAIL: ${WELL_KNOWN_LETSENCRYPT_EMAIL}
-    logging:
-      driver: "json-file"
-      options:
-        max-size: 10m
-        max-file: 3
-    depends_on:
-      - conduit
-    configs:
-      - source: conduit-reverse-conf
-        target: /etc/ferron.kdl
-    networks:
-      - step-ca-network
 configs:
   conduit-config:
     content: |-
@@ -72,16 +51,6 @@ configs:
       client_id = "${CONDUIT_IDPS_SSO_CLIENT_ID}"
       client_secret = "${CONDUIT_IDPS_SSO_CLIENT_SECRET}"
       auth_method = "${CONDUIT_IDPS_SSO_AUTH_METHOD}"
-  conduit-reverse-conf:
-    content: |
-      *:80 {
-          location "/.well-known" {
-              proxy "http://conduit:${VIRTUAL_PORT:-$CONDUIT_PORT}"
-          }
-          location "/_matrix" {
-              proxy "http://conduit:${VIRTUAL_PORT:-$CONDUIT_PORT}"
-          }
-      }
 volumes:
   conduit-db:
     name: conduit-db

@@ -18,10 +18,6 @@ services:
       CONDUIT_TRUSTED_SERVERS: ${CONDUIT_TRUSTED_SERVERS}
       CONDUIT_ADDRESS: ${CONDUIT_ADDRESS}
       CONDUIT_CONFIG: ${CONDUIT_CONFIG:-/matrix-conduit/conduit.toml}
-      VIRTUAL_PORT: ${VIRTUAL_PORT:-$CONDUIT_PORT}
-      VIRTUAL_HOST: ${VIRTUAL_HOST}
-      LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
-      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
     configs:
       - source: conduit-config
         target: ${CONDUIT_CONFIG:-/matrix-conduit/conduit.toml}
@@ -32,7 +28,6 @@ services:
         max-file: 3
     networks:
       - matrix-network
-      - step-ca-network
 configs:
   conduit-config:
     content: |
@@ -52,5 +47,3 @@ volumes:
 networks:
   matrix-network:
     name: matrix-network
-  step-ca-network:
-    external: true
