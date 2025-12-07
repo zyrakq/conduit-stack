@@ -46,7 +46,6 @@ configs:
 volumes:
   conduit-db:
     name: conduit-db
-    driver: local
 
 networks:
   matrix-network:
