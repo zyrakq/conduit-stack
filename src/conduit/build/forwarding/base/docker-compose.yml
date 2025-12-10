@@ -48,4 +48,4 @@ volumes:
     name: conduit-db
 networks:
   matrix-network:
-    name: matrix-network
+    name: ${MATRIX_NETWORK_NAME:-conduit-network}
